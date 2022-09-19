@@ -18,6 +18,7 @@ export default {
       },
     };
   },
+  methods: {},
 };
 </script>
 
@@ -26,7 +27,7 @@ export default {
 
   <main>
     <div class="">
-      <div class="mx-auto m bg-gray-400 w-2/3 p-4">
+      <div class="mx-auto mt-2 bg-gray-400 w-2/3 p-4">
         <form action="">
           <div class="grid grid-cols-[80px_auto_80px_auto] gap-y-4 gap-1">
             <p>Server:</p>
