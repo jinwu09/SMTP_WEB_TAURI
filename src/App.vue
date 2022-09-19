@@ -3,29 +3,60 @@ export default {
   components: {},
   data() {
     return {
-      SenderInfo: {
-        host: "",
-        port: "",
-        auth: {
-          email: "",
-          password: "",
+      Content: {
+        account: {
+          host: "smtp.gmail.com",
+          port: "465",
+          secure: true,
+          auth: {
+            user: "bjaj09yahoo.com@gmail.com",
+            pass: "",
+          },
         },
-      },
-      Message: {
-        subject: "",
-        text: "",
-        html: "",
+        send: {
+          from: "bjaj09yahoo.com@gmail.com",
+          to: "",
+          subject: "",
+          text: "",
+          html: "",
+        },
       },
       AddingEmail: "",
       Emails: [],
+      test1: [],
     };
   },
   methods: {
     AddedEmail() {
       this.Emails.push(this.AddingEmail);
+      console.log(this.Content.send.to);
+      if (this.Emails.length <= 1) {
+        this.Content.send.to = this.AddingEmail;
+      } else {
+        this.Content.send.to += ", " + this.AddingEmail;
+      }
+      this.AddingEmail = "";
+      console.log(this.Content.send.to);
+      // thix.$http.post;
     },
     DeleteEmail(index) {
       this.Emails.splice(index, 1);
+    },
+    SendEmail() {
+      this.$http
+        .post("sendmail", {
+          account: this.Content.account,
+          send: this.Content.send,
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.header);
+        });
     },
   },
 };
@@ -54,24 +85,28 @@ export default {
             </button>
           </div>
         </div>
-        <form action=" " class="">
+        <div class="">
           <div>
             <div class="grid grid-cols-[80px_auto_80px_auto] gap-y-4 gap-1">
               <p>host:</p>
               <input
                 type="text"
                 placeholder="ex smtp.gmail.com"
-                v-model="SenderInfo.host"
+                v-model="Content.account.host"
                 required
               />
               <p>Port</p>
-              <input type="text" v-model="SenderInfo.port" required />
-              <p>Username:</p>
-              <input type="email" v-model="SenderInfo.auth.email" required />
+              <input type="text" v-model="Content.account.port" required />
+              <p>Email:</p>
+              <input
+                type="email"
+                v-model="Content.account.auth.user"
+                required
+              />
               <p>Password:</p>
               <input
                 type="password"
-                v-model="SenderInfo.auth.password"
+                v-model="Content.account.auth.pass"
                 required
               />
             </div>
@@ -79,23 +114,23 @@ export default {
               <p>Message:</p>
               <div class="grid grid-cols-[80px_auto_50px] gap-y-4">
                 <p>Subject:</p>
-                <input type="text" v-model="Message.subject" />
+                <input type="text" v-model="Content.send.subject" />
                 <p></p>
                 <p>Message:</p>
-                <input type="text" v-model="Message.text" class="h-6" />
-                <p></p>
-                <p>HTML</p>
                 <textarea
                   name=""
                   cols="50"
                   rows="10"
-                  v-model="Message.html"
+                  v-model="Content.send.text"
                   class="resize-none"
                 ></textarea>
               </div>
             </div>
+            <button @click="SendEmail()" class="bg-green-400">
+              Send email
+            </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   </main>

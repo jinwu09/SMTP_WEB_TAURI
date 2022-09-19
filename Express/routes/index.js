@@ -16,15 +16,15 @@ router.get("/", function (req, res, next) {
   // res.send(JSON.stringify(hello));
   // res.render("index", { title: "hello" });
 });
-router.get("/hello", function (req, res, next) {
-  res.send(JSON.stringify(hello));
+router.post("/test", function (req, res, next) {
+  console.log(req.body);
+  // res.send(JSON.stringify(hello));
 });
 router.post("/sendmail", function (req, res) {
   let content = req.body;
-
   let transporter = nodemailer.createTransport({
     host: content.account.host,
-    port: content.account.port,
+    port: parseInt(content.account.port),
     secure: content.account.secure,
     auth: {
       user: content.account.auth.user,
@@ -38,12 +38,15 @@ router.post("/sendmail", function (req, res) {
     text: content.send.text,
     html: content.send.html,
   });
-  let status = {
-    code: 200,
-    messageid: info.messageid,
+  let body = {
+    status: {
+      code: 200,
+      messageid: info.messageid,
+    },
     content: content,
   };
-  res.status(status.code).json({ status });
+  res.status(body.status.code).json({ body });
   // res.sendStatus(200);
 });
+
 module.exports = router;
